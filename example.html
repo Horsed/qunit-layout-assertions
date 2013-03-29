@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+  <style type="text/css" media="screen">
+    body {
+      width: 820px;
+      margin: 0 auto;
+    }
+  </style>
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.11.0.js"></script>
+  <script type="text/javascript" src="qunit-layout-tests.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      test("Position of BODY", function() {
+        assertOffsetLeft($("body"), 550, "x-position should be 550");
+        assertOffsetTop($("body"), 1, "y-position should be 0");
+      });
+    });
+  </script>
+</body>
+</html>
