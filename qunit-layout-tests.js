@@ -1,44 +1,56 @@
 /*
- * QUnit Layout Tests
+ * QUnit Layout Assertions
  * Copyright (c) 2013 Martin Knopf Licensed under the MIT license.
  *
  * jQuery, QUnit
  * Copyright 2013 The jQuery Foundation.
  */
 
-QUnit.assertOffsetLeft = assertOffsetLeft = function($el, expectedOffset, msg) {
-  equal($el.offset().left, expectedOffset, msg);
-}
+QUnit.assertWidth = assertWidth = function($el, expected, tolerance, msg) {
+  shortcuts.almostEqual($el.width(), expected, tolerance, msg);
+};
 
-QUnit.assertOffsetTop = assertOffsetTop = function($el, expectedOffset, msg) {
-  equal($el.offset().top, expectedOffset, msg);
-}
+QUnit.assertOuterWidth = assertOuterWidth = function($el, expected, tolerance, msg) {
+  shortcuts.almostEqual($el.outerWidth(), expected, tolerance, msg);
+};
 
-/**
- * Logging of QUnit assertions.
- */
-QUnit.log(function(details) {
-  var isMSIE = /msie/.test(navigator.userAgent.toLowerCase()),
-    colorCSS = 'background:' + (details.result ? 'green' : 'red') + ';color:white';
+QUnit.assertOuterWidthWithMargin = assertOuterWidthWithMargin = function($el, expected, tolerance, msg) {
+  shortcuts.almostEqual($el.outerWidth(true), expected, tolerance, msg);
+};
 
-  if(details.result) {
-    if(isMSIE) {
-      console.log('[+++] %s: %s', details.name, details.message);
-    } else {
-      console.log('%c[+++]', colorCSS, details.name, ':', details.message);
-    }
-  } else {
-    if(isMSIE) {
-      if(details.actual && details.expected)
-        console.error('[---] %s: %s\n   (actual = %s, expected = %s)\n%s', details.name, details.message, details.actual, details.expected, details.source);
-      else
-        console.error('[---] %s: %s\n%s', details.name, details.message, details.source);
-    } else {
-      console.group('%c[---]', colorCSS, details.name, ':', details.message);
-      if(details.actual && details.expected)
-        console.log('(actual = %s, expected = %s)', details.actual, details.expected);
-      console.log(details.source);
-      console.groupEnd();
-    }
+QUnit.assertOffsetLeft = assertOffsetLeft = function($el, expected, tolerance, msg) {
+  shortcuts.almostEqual($el.offset().left, expected, tolerance, msg);
+};
+
+QUnit.assertOffsetRight = assertOffsetRight = function($el, expected, tolerance, msg) {
+  shortcuts.almostEqual($el.offset().left + $el.outerWidth(), expected, tolerance, msg);
+};
+
+QUnit.assertOffsetTop = assertOffsetTop = function($el, expected, tolerance, msg) {
+  shortcuts.almostEqual($el.offset().top, expected, tolerance, msg);
+};
+
+QUnit.assertHorizontallyCentered = assertHorizontallyCentered = function($el, tolerance, msg) {
+  var $parent = $el.parent(),
+      dWidth = ($parent.outerWidth() - $el.outerWidth()) / 2,
+      dOffset= $el.offset().left - $parent.offset().left;
+  
+  shortcuts.almostEqual(dWidth, dOffset, tolerance, msg);
+};
+
+var shortcuts = {
+  /**
+   * Returns the parsed float value of the given css property of the given element.
+   */
+  cssValue: function($el, property) {
+    return parseFloat($el.css(property).replace('px', ''));
+  },
+  almostEqual: function(actual, expected, tolerance, msg) {
+    msg = typeof msg === "undefined" && tolerance && typeof tolerance === "string" ? tolerance : msg;
+    tolerance = tolerance && typeof tolerance === "number" ? tolerance : 0;
+
+    var passes = Math.abs(actual - expected) <= tolerance;
+
+    QUnit.push(passes, actual, expected, msg);
   }
-});
+};
