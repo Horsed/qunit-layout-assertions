@@ -4,3 +4,4 @@ vgl_files/
 socialshareprivacy/
 vgl.htm
 vgl-tests.js
+qunit-logging.js
