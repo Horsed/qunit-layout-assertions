@@ -22,7 +22,7 @@ describe('QUnit Layout Assertions', function() {
       },
       log: function() { 'noop'; }
   };
-  require('../qunit-layout-tests.js');
+  require('../qunit-layout-assertions.js');
   
   describe('#assertWidth', function() {
     it('should compare to the given element\'s width', function() {
